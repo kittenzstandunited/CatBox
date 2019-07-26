@@ -20,7 +20,7 @@ _logic_smbclient
 
 _masscan()
 {
-  masscan=$(masscan -p$tcpports --rate=$rate $rhost -oG ~/$rhost/masscan$date.txt --wait 0 -e tun0| sed -n 's/.* port \([^ ]*\).*/\1/p' | cut -f1 -d"/" | tr '\n' ',')
+  masscan=$(masscan -p$tcpports --rate=$rate $rhost --wait 0 -e tun0| sed -n 's/.* port \([^ ]*\).*/\1/p' | cut -f1 -d"/" | tr '\n' ',')
 }
 _masscan_udp()
 {
@@ -32,7 +32,7 @@ _nmap()
 }
 _nmap_udp()
 {
-  nmap=$(nmap -p$masscan_udp -sV -sC $rhost)
+  nmap=$(nmap -p$masscan -sV -sC $rhost)
 }
 _nikto()
 {
@@ -71,17 +71,17 @@ _logic_udpanswer()
 }
 _logic_masscan()
 {
-  if [[ $masscan == "80,"* || $masscan == *",80" || $masscan == "80" ]];then
+  if [[ $masscan == "80,"* || $masscan == *",80" || $masscan == "80" || $masscan == *",80,"* ]];then
   _nikto
   _gobuster
-  elif [[ $masscan == "8080,"* || $masscan == *",8080" || $masscam == "8080" ]];then
+  elif [[ $masscan == "8080,"* || $masscan == *",8080" || $masscan == "8080" || $masscan == *"80,"* ]];then
   _nikto_8080
   _gobuster_8080
   fi
 }
 _logic_smbclient()
 {
-  if [[ $masc == "445,"* || $masc == *",445" || $masc == "445" ]];then
+  if [[ $masscan == "445,"* || $masscan == *",445" || $masscan == "445" || $masscan == *",445,"* ]];then
   _smbclient
   fi
 }
